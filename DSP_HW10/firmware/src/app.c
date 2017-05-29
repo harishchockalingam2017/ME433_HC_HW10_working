@@ -58,6 +58,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 // *****************************************************************************
 
+
 // *****************************************************************************
 /* Application Data
   Summary:
@@ -68,7 +69,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     This structure should be initialized by the APP_Initialize function.
     
     Application strings and buffers are be defined outside this structure.
-*/
+ */
 uint8_t APP_MAKE_BUFFER_DMA_READY dataOut[APP_READ_BUFFER_SIZE];
 uint8_t APP_MAKE_BUFFER_DMA_READY readBuffer[APP_READ_BUFFER_SIZE];
 #define NELEMS(x) (sizeof(x)/sizeof(x[0]))
@@ -98,31 +99,11 @@ APP_DATA appData;
 // *****************************************************************************
 
 /* TODO:  Add any necessary callback functions.
-*/
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Application Local Functions
-// *****************************************************************************
-// *****************************************************************************
-
-
-/* TODO:  Add any necessary local functions.
-*/
-
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Application Initialization and State Machine Functions
-// *****************************************************************************
-// *****************************************************************************
-
-/*******************************************************************************
-  Function:
-    void APP_Initialize ( void )
-  Remarks:
-    See prototype in app.h.
  */
+
+/*******************************************************
+ * USB CDC Device Events - Application Event Handler
+ *******************************************************/
 
 USB_DEVICE_CDC_EVENT_RESPONSE APP_USBDeviceCDCEventHandler
 (
@@ -245,7 +226,7 @@ void APP_USBDeviceEventHandler(USB_DEVICE_EVENT event, void * eventData, uintptr
 
         case USB_DEVICE_EVENT_CONFIGURED:
 
-            /* Check the configuratio. We only support configuration 1 */
+            /* Check the configuration. We only support configuration 1 */
             configuredEventData = (USB_DEVICE_EVENT_DATA_CONFIGURED*) eventData;
             if (configuredEventData->configurationValue == 1) {
                 /* Update LED to show configured state */
@@ -446,7 +427,7 @@ void APP_Tasks(void) {
             /* Check if a character was received or a switch was pressed.
              * The isReadComplete flag gets updated in the CDC event handler. */
 
-            if (appData.isReadComplete || _CP0_GET_COUNT() - sTime> 240000) {
+            if (appData.isReadComplete || _CP0_GET_COUNT() - sTime > 240000) {
                 appData.state = APP_STATE_SCHEDULE_WRITE;
             }
 
@@ -477,18 +458,18 @@ void APP_Tasks(void) {
                     
                     for(i=0;i<100;i=i+1){
                         imuT=_CP0_GET_COUNT();
-                        while(_CP0_GET_COUNT() - imuT > (240000)){;}
+                        while(_CP0_GET_COUNT() - imuT > 240000){;}
                         
-                        IMU_read_multiple(IMU_ADD, 0x20, Data, 7);
+                        IMU_read_multiple(0x20, IMU_ADD, Data, 7);
                         
                         //MAF
                         MAF_data[m]=Data[6];
-                        m++;
+                        m+m+1;
                         if(m==arr_Size){
                             m=0;
                         }
                         for(mi=0;mi<arr_Size;mi=mi+1){
-                            sum=sum + MAF_data[mi]; 
+                            sum=sum+MAF_data[mi]; 
                         }
                         average=sum/arr_Size;
                         sum=0;
